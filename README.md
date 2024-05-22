@@ -6,7 +6,6 @@ PostgreSQL installed and running
 Setup Instructions
 
 Clone the repository
-
 Clone the project repository from the provided URL or download the source code.
 
 Install dependencies
@@ -24,9 +23,7 @@ Connect to your PostgreSQL database and run the SQL queries provided in the proj
 Build the project
 
 Run the command npm run build to build the project.
-
 Start the server
-
 Run the command npm start to start the server.
 The server should now be running at http://localhost:3000.
 
