@@ -1,0 +1,50 @@
+Main Workflows
+
+1. User Registration
+   - The user navigates to the registration page/form.
+   - The user enters a username and password.
+   - The frontend sends a POST request to the `/users/register` backend endpoint with the user credentials.
+   - The backend validates the data, hashes the password, and stores the user information in the database.
+   - The backend responds with a success message or error message.
+
+2. User Authentication
+   - The user navigates to the login page/form.
+   - The user enters their username and password.
+   - The frontend sends a POST request to the `/users/login` backend endpoint with the user credentials.
+   - The backend verifies the user credentials against the database.
+   - If the credentials are valid, the backend generates a JSON Web Token (JWT) and sends it back to the frontend.
+   - The frontend stores the JWT in the browser's localStorage.
+
+3. Task Management
+   - After successful authentication, the user is redirected to the tasks page.
+   - The frontend sends a GET request to the `/tasks` backend endpoint with the JWT in the `Authorization` header.
+   - The backend verifies the JWT and retrieves the user's tasks from the database.
+   - The backend responds with the list of tasks.
+   - The frontend renders the task list.
+   - The user can perform CRUD operations (Create, Read, Update, Delete) on tasks:
+     - **Create**: The user submits a new task, and the frontend sends a POST request to the `/tasks` backend endpoint with the task data and JWT.
+     - **Read**: The list of tasks is already retrieved and rendered on the tasks page.
+     - **Update**: The user selects a task to update, modifies the task details, and the frontend sends a PUT request to the `/tasks/:id` backend endpoint with the updated task data and JWT.
+     - **Delete**: The user selects a task to delete, and the frontend sends a DELETE request to the `/tasks/:id` backend endpoint with the task ID and JWT.
+
+Code Structure
+
+1. Backend
+   - `app.js`: The entry point for the backend server, setting up Express.js and importing routes.
+   - `db.js`: Handles the PostgreSQL database connection.
+   - `auth.js`: Contains functions for user registration, authentication, and password hashing.
+   - `routes/users.js`: Defines the routes for user registration and login.
+   - `routes/tasks.js`: Defines the routes for task management (CRUD operations).
+   - `middleware/auth.js`: Middleware for verifying the JSON Web Token (JWT) for protected routes.
+   - `middleware/errorHandler.js`: Middleware for handling errors and sending appropriate error responses.
+
+2. Frontend
+   - `public/index.html`: The main HTML file containing the structure of the user interface.
+   - `public/styles.css`: CSS file for styling the user interface.
+   - `public/script.js`: JavaScript file containing the frontend logic and event handlers.
+   - The frontend code is organized into separate sections or functions for:
+     - Rendering the user interface elements (login, registration, task list, forms).
+     - Sending HTTP requests to the backend APIs for user authentication and task management.
+     - Handling responses from the backend and updating the user interface accordingly.
+     - Implementing form validation and error handling.
+     - Integrating with the backend authentication system and managing the JWT token.
