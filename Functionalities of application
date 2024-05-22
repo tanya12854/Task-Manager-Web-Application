@@ -1,0 +1,48 @@
+ The key elements that a demo video showcasing the functionality of the Task Manager application should include:
+
+1. Introduction
+   - Start the video by introducing the Task Manager application and its purpose.
+   - Briefly explain the main features and functionalities.
+
+2. User Registration
+   - Show the user registration process.
+   - Demonstrate filling out the registration form with a new username and password.
+   - Highlight any validation or error messages that appear during the registration process.
+
+3. User Login
+   - Transition to the login page or section.
+   - Enter the registered username and password to log in.
+   - Show the successful login process and any relevant messages or redirects.
+
+4. Task Creation
+   - After successful login, navigate to the tasks section or dashboard.
+   - Demonstrate creating a new task by clicking the "Add Task" button or similar.
+   - Fill out the task details, such as title, description, and due date.
+   - Show the process of submitting the new task and its addition to the task list.
+
+5. Task Listing
+   - Display the list of tasks, including the newly created task.
+   - Highlight any relevant information or formatting of the task details.
+
+6. Task Update
+   - Select a task from the list and click the "Edit" or "Update" button.
+   - Modify the task details, such as changing the title or due date.
+   - Submit the updated task and show the changes reflected in the task list.
+
+7. Task Deletion
+   - Select a task from the list and click the "Delete" button.
+   - Confirm the deletion action if prompted.
+   - Show the task being removed from the list.
+
+8. Logout
+   - Demonstrate the logout process, either by clicking a "Logout" button or clearing the authentication token.
+   - Show the redirection back to the login page or the appropriate state after logging out.
+
+9. Error Handling 
+   - If applicable, you can showcase error handling by simulating scenarios like network errors, invalid input, or unauthorized access attempts.
+   - Demonstrate how the application handles and displays error messages or feedback to the user.
+
+10. Conclusion
+    - Summarize the key features and functionality demonstrated in the video.
+    - Provide any additional relevant information or instructions for using the Task Manager application.
+
