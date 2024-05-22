@@ -1,0 +1,425 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Task Manager</h1>
+    <nav>
+      <ul>
+        <li><a href="#" id="loginLink">Login</a></li>
+        <li><a href="#" id="registerLink">Register</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="loginSection" class="hidden">
+      <!-- Login form -->
+    </section>
+
+    <section id="registerSection" class="hidden">
+      <!-- Registration form -->
+    </section>
+
+    <section id="tasksSection" class="hidden">
+      <!-- Tasks list and CRUD operations -->
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+nav li {
+  margin-left: 20px;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+}
+
+main {
+  padding: 20px;
+}
+
+section {
+  margin-bottom: 20px;
+}
+
+.hidden {
+  display: none;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const loginLink = document.getElementById('loginLink');
+  const registerLink = document.getElementById('registerLink');
+  const loginSection = document.getElementById('loginSection');
+  const registerSection = document.getElementById('registerSection');
+  const tasksSection = document.getElementById('tasksSection');
+
+  const showSection = (section) => {
+    loginSection.classList.add('hidden');
+    registerSection.classList.add('hidden');
+    tasksSection.classList.add('hidden');
+    section.classList.remove('hidden');
+  };
+
+  loginLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    showSection(loginSection);
+  });
+
+  registerLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    showSection(registerSection);
+  });
+});
+<form id="loginForm">
+  <h2>Login</h2>
+  <div>
+    <label for="loginUsername">Username:</label>
+    <input type="text" id="loginUsername" required>
+  </div>
+  <div>
+    <label for="loginPassword">Password:</label>
+    <input type="password" id="loginPassword" required>
+  </div>
+  <button type="submit">Login</button>
+</form>
+<form id="registerForm">
+  <h2>Register</h2>
+  <div>
+    <label for="registerUsername">Username:</label>
+    <input type="text" id="registerUsername" required>
+  </div>
+  <div>
+    <label for="registerPassword">Password:</label>
+    <input type="password" id="registerPassword" required>
+  </div>
+  <button type="submit">Register</button>
+</form>
+document.addEventListener('DOMContentLoaded', () => {
+  // ... (existing code) ...
+
+  const loginForm = document.getElementById('loginForm');
+  const registerForm = document.getElementById('registerForm');
+
+  const API_BASE_URL = 'http://localhost:3000'; // Replace with your backend API URL
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('loginUsername').value;
+    const password = document.getElementById('loginPassword').value;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/users/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (response.ok) {
+        const { token } = await response.json();
+        // Store the token and redirect to the tasks section
+        localStorage.setItem('token', token);
+        showSection(tasksSection);
+      } else {
+        const error = await response.json();
+        alert(error.error);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  });
+
+  registerForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('registerUsername').value;
+    const password = document.getElementById('registerPassword').value;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/users/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert(data.message);
+        showSection(loginSection);
+      } else {
+        const error = await response.json();
+        alert(error.error);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  });
+});
+<div id="tasksContainer">
+  <h2>Tasks</h2>
+  <ul id="tasksList"></ul>
+  <button id="addTaskBtn">Add Task</button>
+</div>
+
+<div id="addTaskForm" class="hidden">
+  <h3>Add Task</h3>
+  <form id="createTaskForm">
+    <div>
+      <label for="taskTitle">Title:</label>
+      <input type="text" id="taskTitle" required>
+    </div>
+    <div>
+      <label for="taskDescription">Description:</label>
+      <textarea id="taskDescription"></textarea>
+    </div>
+    <div>
+      <label for="taskDueDate">Due Date:</label>
+      <input type="date" id="taskDueDate">
+    </div>
+    <button type="submit">Save</button>
+    <button type="button" id="cancelAddTaskBtn">Cancel</button>
+  </form>
+</div>
+document.addEventListener('DOMContentLoaded', () => {
+  // ... (existing code) ...
+
+  const tasksList = document.getElementById('tasksList');
+  const addTaskBtn = document.getElementById('addTaskBtn');
+  const addTaskForm = document.getElementById('addTaskForm');
+  const createTaskForm = document.getElementById('createTaskForm');
+  const cancelAddTaskBtn = document.getElementById('cancelAddTaskBtn');
+
+  addTaskBtn.addEventListener('click', () => {
+    addTaskForm.classList.remove('hidden');
+  });
+
+  cancelAddTaskBtn.addEventListener('click', () => {
+    addTaskForm.classList.add('hidden');
+  });
+
+  createTaskForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = document.getElementById('taskTitle').value;
+    const description = document.getElementById('taskDescription').value;
+    const dueDate = document.getElementById('taskDueDate').value;
+
+    const token = localStorage.getItem('token');
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/tasks`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ title, description, due_date: dueDate }),
+      });
+
+      if (response.ok) {
+        const task = await response.json();
+        renderTask(task);
+        addTaskForm.classList.add('hidden');
+        createTaskForm.reset();
+      } else {
+        const error = await response.json();
+        alert(error.error);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  });
+
+  const renderTask = (task) => {
+    const taskItem = document.createElement('li');
+    taskItem.textContent = `${task.title} - ${task.description} - Due: ${task.due_date ? new Date(task.due_date).toLocaleDateString() : 'No due date'}`;
+    tasksList.appendChild(taskItem);
+  };
+
+  const fetchTasks = async () => {
+    const token = localStorage.getItem('token');
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/tasks`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const tasks = await response.json();
+        tasksList.innerHTML = '';
+        tasks.forEach(task => renderTask(task));
+      } else {
+        const error = await response.json();
+        alert(error.error);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const showTasksSection = () => {
+    showSection(tasksSection);
+    fetchTasks();
+  };
+
+  // ... (existing code) ...
+
+  if (localStorage.getItem('token')) {
+    showTasksSection();
+  }
+});
+<button class="editTaskBtn">Edit</button>
+<button class="deleteTaskBtn">Delete</button>
+const renderTask = (task) => {
+  const taskItem = document.createElement('li');
+  taskItem.innerHTML = `
+    ${task.title} - ${task.description} - Due: ${task.due_date ? new Date(task.due_date).toLocaleDateString() : 'No due date'}
+    <button class="editTaskBtn">Edit</button>
+    <button class="deleteTaskBtn">Delete</button>
+  `;
+
+  const editTaskBtn = taskItem.querySelector('.editTaskBtn');
+  const deleteTaskBtn = taskItem.querySelector('.deleteTaskBtn');
+
+  editTaskBtn.addEventListener('click', () => {
+    // Add code to open the update task form
+  });
+
+  deleteTaskBtn.addEventListener('click', async () => {
+    const token = localStorage.getItem('token');
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/tasks/${task.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        taskItem.remove();
+      } else {
+        const error = await response.json();
+        alert(error.error);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  });
+
+  tasksList.appendChild(taskItem);
+};
+<div id="updateTaskForm" class="hidden">
+  <h3>Update Task</h3>
+  <form id="updateTaskFormElement">
+    <input type="hidden" id="updateTaskId">
+    <div>
+      <label for="updateTaskTitle">Title:</label>
+      <input type="text" id="updateTaskTitle" required>
+    </div>
+    <div>
+      <label for="updateTaskDescription">Description:</label>
+      <textarea id="updateTaskDescription"></textarea>
+    </div>
+    <div>
+      <label for="updateTaskDueDate">Due Date:</label>
+      <input type="date" id="updateTaskDueDate">
+    </div>
+    <div>
+      <label for="updateTaskCompleted">Completed:</label>
+      <input type="checkbox" id="updateTaskCompleted">
+    </div>
+    <button type="submit">Save</button>
+    <button type="button" id="cancelUpdateTaskBtn">Cancel</button>
+  </form>
+</div>
+const openUpdateTaskForm = (task) => {
+  document.getElementById('updateTaskId').value = task.id;
+  document.getElementById('updateTaskTitle').value = task.title;
+  document.getElementById('updateTaskDescription').value = task.description;
+  document.getElementById('updateTaskDueDate').value = task.due_date || '';
+  document.getElementById('updateTaskCompleted').checked = task.completed;
+
+  addTaskForm.classList.add('hidden');
+  updateTaskForm.classList.remove('hidden');
+};
+
+const updateTaskForm = document.getElementById('updateTaskForm');
+const updateTaskFormElement = document.getElementById('updateTaskFormElement');
+const cancelUpdateTaskBtn = document.getElementById('cancelUpdateTaskBtn');
+
+cancelUpdateTaskBtn.addEventListener('click', () => {
+  updateTaskForm.classList.add('hidden');
+});
+
+updateTaskFormElement.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const taskId = document.getElementById('updateTaskId').value;
+  const title = document.getElementById('updateTaskTitle').value;
+  const description = document.getElementById('updateTaskDescription').value;
+  const dueDate = document.getElementById('updateTaskDueDate').value;
+  const completed = document.getElementById('updateTaskCompleted').checked;
+
+  const token = localStorage.getItem('token');
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ title, description, due_date: dueDate, completed }),
+    });
+
+    if (response.ok) {
+      const updatedTask = await response.json();
+      fetchTasks();
+      updateTaskForm.classList.add('hidden');
+    } else {
+      const error = await response.json();
+      alert(error.error);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+});
+editTaskBtn.addEventListener('click', () => {
+  openUpdateTaskForm(task);
+});
+
